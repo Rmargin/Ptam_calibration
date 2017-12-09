@@ -1,0 +1,16 @@
+<launch>
+      <node pkg="rosbag" type="play" name="rosbag" args="-d 2 /home/wangrz/catkin_ws1/src/rosbag/image.bag"/>
+      <remap from="image" to="/camera/image_raw"/>
+      <node name="extract" pkg="image_view" type="extract_images" respawn="false" output="screen" cwd="ROS_HOME">
+      </node>
+
+        <node name="proc" ns="camera" pkg="image_proc" type="image_proc" args="">
+	</node>
+
+        <node name="cameracalibrator" pkg="ptam" type="cameracalibrator" clear_params="true" output="screen">
+
+	    <remap from="image" to="/cam0/image_raw"/>
+	    <remap from="pose" to="pose"/>
+	    <rosparam file="/home/wangrz/catkin_ws1/src/ethzasl_ptam/ptam/PtamFixParams.yaml"/>
+        </node>
+</launch>
